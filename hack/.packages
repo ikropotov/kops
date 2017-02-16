@@ -2,6 +2,7 @@ k8s.io/kops
 k8s.io/kops/channels/cmd/channels
 k8s.io/kops/channels/pkg/api
 k8s.io/kops/channels/pkg/channels
+k8s.io/kops/cloudmock/aws/mockautoscaling
 k8s.io/kops/cloudmock/aws/mockec2
 k8s.io/kops/cloudmock/aws/mockroute53
 k8s.io/kops/cmd/kops
@@ -16,6 +17,7 @@ k8s.io/kops/federation
 k8s.io/kops/federation/model
 k8s.io/kops/federation/targets/kubernetes
 k8s.io/kops/federation/tasks
+k8s.io/kops/nodeup/pkg/bootstrap
 k8s.io/kops/nodeup/pkg/distros
 k8s.io/kops/nodeup/pkg/model
 k8s.io/kops/nodeup/pkg/model/resources

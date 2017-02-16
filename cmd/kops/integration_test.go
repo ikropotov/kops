@@ -61,10 +61,22 @@ func TestPrivateWeave(t *testing.T) {
 	runTest(t, "privateweave.example.com", "../../tests/integration/privateweave", "v1alpha2", true)
 }
 
+// TestPrivateFlannel runs the test on a configuration with private topology, flannel networking
+func TestPrivateFlannel(t *testing.T) {
+	runTest(t, "privateflannel.example.com", "../../tests/integration/privateflannel", "v1alpha1", true)
+	runTest(t, "privateflannel.example.com", "../../tests/integration/privateflannel", "v1alpha2", true)
+}
+
 // TestPrivateCalico runs the test on a configuration with private topology, calico networking
 func TestPrivateCalico(t *testing.T) {
 	runTest(t, "privatecalico.example.com", "../../tests/integration/privatecalico", "v1alpha1", true)
 	runTest(t, "privatecalico.example.com", "../../tests/integration/privatecalico", "v1alpha2", true)
+}
+
+// TestPrivateCanal runs the test on a configuration with private topology, canal networking
+func TestPrivateCanal(t *testing.T) {
+	runTest(t, "privatecanal.example.com", "../../tests/integration/privatecanal", "v1alpha1", true)
+	runTest(t, "privatecanal.example.com", "../../tests/integration/privatecanal", "v1alpha2", true)
 }
 
 func runTest(t *testing.T, clusterName string, srcDir string, version string, private bool) {

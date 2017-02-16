@@ -311,6 +311,9 @@ type KubeletConfigSpec struct {
 	EvictionMaxPodGracePeriod int32 `json:"evictionMaxPodGracePeriod,omitempty" flag:"eviction-max-pod-grace-period" flag-empty:"0"`
 	// Comma-delimited list of minimum reclaims (e.g. imagefs.available=2Gi) that describes the minimum amount of resource the kubelet will reclaim when performing a pod eviction if that resource is under pressure.
 	EvictionMinimumReclaim string `json:"evictionMinimumReclaim,omitempty" flag:"eviction-minimum-reclaim"`
+
+	// The full path of the directory in which to search for additional third party volume plugins
+	VolumePluginDirectory string `json:"volumePluginDirectory,omitempty" flag:"volume-plugin-dir"`
 }
 
 type KubeProxyConfig struct {
@@ -514,7 +517,7 @@ type KubeControllerManagerConfig struct {
 	//// case of node failure. For more details look into RateLimiter.
 	//DeletingPodsBurst int32 `json:"deletingPodsBurst"`
 	//// nodeMontiorGracePeriod is the amount of time which we allow a running node to be
-	//// unresponsive before marking it unhealty. Must be N times more than kubelet's
+	//// unresponsive before marking it unhealthy. Must be N times more than kubelet's
 	//// nodeStatusUpdateFrequency, where N means number of retries allowed for kubelet
 	//// to post node status.
 	//NodeMonitorGracePeriod unversioned.Duration `json:"nodeMonitorGracePeriod"`
@@ -522,7 +525,7 @@ type KubeControllerManagerConfig struct {
 	//// Retry interval equals node-sync-period.
 	//RegisterRetryCount int32 `json:"registerRetryCount"`
 	//// nodeStartupGracePeriod is the amount of time which we allow starting a node to
-	//// be unresponsive before marking it unhealty.
+	//// be unresponsive before marking it unhealthy.
 	//NodeStartupGracePeriod unversioned.Duration `json:"nodeStartupGracePeriod"`
 	//// nodeMonitorPeriod is the period for syncing NodeStatus in NodeController.
 	//NodeMonitorPeriod unversioned.Duration `json:"nodeMonitorPeriod"`

@@ -272,16 +272,6 @@ type KubeDNSConfig struct {
 	ServerIP string `json:"serverIP,omitempty"`
 }
 
-//
-//type MasterConfig struct {
-//	Name string `json:",omitempty"`
-//
-//	Image       string `json:",omitempty"`
-//	Zone        string `json:",omitempty"`
-//	MachineType string `json:",omitempty"`
-//}
-//
-
 type EtcdClusterSpec struct {
 	// Name is the name of the etcd cluster (main, events etc)
 	Name string `json:"name,omitempty"`
@@ -362,7 +352,11 @@ func (c *Cluster) FillDefaults() error {
 		// OK
 	} else if c.Spec.Networking.Weave != nil {
 		// OK
+	} else if c.Spec.Networking.Flannel != nil {
+		// OK
 	} else if c.Spec.Networking.Calico != nil {
+		// OK
+	} else if c.Spec.Networking.Canal != nil {
 		// OK
 	} else {
 		// No networking model selected; choose Kubenet
