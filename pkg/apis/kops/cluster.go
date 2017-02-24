@@ -237,6 +237,9 @@ type ClusterSpec struct {
 
 	// API field controls how the API is exposed outside the cluster
 	API *AccessSpec `json:"api,omitempty"`
+
+	// Tags for AWS instance groups
+	CloudLabels map[string]string `json:"cloudLabels,omitempty"`
 }
 
 type AccessSpec struct {
@@ -260,7 +263,8 @@ const (
 )
 
 type LoadBalancerAccessSpec struct {
-	Type LoadBalancerType `json:"type,omitempty"`
+	Type               LoadBalancerType `json:"type,omitempty"`
+	IdleTimeoutSeconds *int64           `json:"idleTimeoutSeconds,omitempty"`
 }
 
 type KubeDNSConfig struct {

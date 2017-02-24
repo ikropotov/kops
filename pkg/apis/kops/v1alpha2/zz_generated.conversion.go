@@ -472,6 +472,7 @@ func autoConvert_v1alpha2_ClusterSpec_To_kops_ClusterSpec(in *ClusterSpec, out *
 	} else {
 		out.API = nil
 	}
+	out.CloudLabels = in.CloudLabels
 	return nil
 }
 
@@ -623,6 +624,7 @@ func autoConvert_kops_ClusterSpec_To_v1alpha2_ClusterSpec(in *kops.ClusterSpec, 
 	} else {
 		out.API = nil
 	}
+	out.CloudLabels = in.CloudLabels
 	return nil
 }
 
@@ -1100,6 +1102,10 @@ func autoConvert_v1alpha2_KubeAPIServerConfig_To_kops_KubeAPIServerConfig(in *Ku
 	out.OIDCIssuerURL = in.OIDCIssuerURL
 	out.OIDCClientID = in.OIDCClientID
 	out.OIDCCAFile = in.OIDCCAFile
+	out.AuditLogPath = in.AuditLogPath
+	out.AuditLogMaxAge = in.AuditLogMaxAge
+	out.AuditLogMaxBackups = in.AuditLogMaxBackups
+	out.AuditLogMaxSize = in.AuditLogMaxSize
 	out.AuthorizationMode = in.AuthorizationMode
 	out.AuthorizationRBACSuperUser = in.AuthorizationRBACSuperUser
 	return nil
@@ -1137,6 +1143,10 @@ func autoConvert_kops_KubeAPIServerConfig_To_v1alpha2_KubeAPIServerConfig(in *ko
 	out.OIDCIssuerURL = in.OIDCIssuerURL
 	out.OIDCClientID = in.OIDCClientID
 	out.OIDCCAFile = in.OIDCCAFile
+	out.AuditLogPath = in.AuditLogPath
+	out.AuditLogMaxAge = in.AuditLogMaxAge
+	out.AuditLogMaxBackups = in.AuditLogMaxBackups
+	out.AuditLogMaxSize = in.AuditLogMaxSize
 	out.AuthorizationMode = in.AuthorizationMode
 	out.AuthorizationRBACSuperUser = in.AuthorizationRBACSuperUser
 	return nil
@@ -1168,6 +1178,7 @@ func autoConvert_v1alpha2_KubeControllerManagerConfig_To_kops_KubeControllerMana
 		out.LeaderElection = nil
 	}
 	out.AttachDetachReconcileSyncPeriod = in.AttachDetachReconcileSyncPeriod
+	out.TerminatedPodGCThreshold = in.TerminatedPodGCThreshold
 	return nil
 }
 
@@ -1197,6 +1208,7 @@ func autoConvert_kops_KubeControllerManagerConfig_To_v1alpha2_KubeControllerMana
 		out.LeaderElection = nil
 	}
 	out.AttachDetachReconcileSyncPeriod = in.AttachDetachReconcileSyncPeriod
+	out.TerminatedPodGCThreshold = in.TerminatedPodGCThreshold
 	return nil
 }
 
@@ -1321,7 +1333,6 @@ func autoConvert_v1alpha2_KubeletConfigSpec_To_kops_KubeletConfigSpec(in *Kubele
 	out.NetworkPluginMTU = in.NetworkPluginMTU
 	out.ImageGCHighThresholdPercent = in.ImageGCHighThresholdPercent
 	out.ImageGCLowThresholdPercent = in.ImageGCLowThresholdPercent
-	out.TerminatedPodGCThreshold = in.TerminatedPodGCThreshold
 	out.EvictionHard = in.EvictionHard
 	out.EvictionSoft = in.EvictionSoft
 	out.EvictionSoftGracePeriod = in.EvictionSoftGracePeriod
@@ -1365,7 +1376,6 @@ func autoConvert_kops_KubeletConfigSpec_To_v1alpha2_KubeletConfigSpec(in *kops.K
 	out.NetworkPluginMTU = in.NetworkPluginMTU
 	out.ImageGCHighThresholdPercent = in.ImageGCHighThresholdPercent
 	out.ImageGCLowThresholdPercent = in.ImageGCLowThresholdPercent
-	out.TerminatedPodGCThreshold = in.TerminatedPodGCThreshold
 	out.EvictionHard = in.EvictionHard
 	out.EvictionSoft = in.EvictionSoft
 	out.EvictionSoftGracePeriod = in.EvictionSoftGracePeriod
@@ -1416,6 +1426,7 @@ func Convert_kops_LeaderElectionConfiguration_To_v1alpha2_LeaderElectionConfigur
 
 func autoConvert_v1alpha2_LoadBalancerAccessSpec_To_kops_LoadBalancerAccessSpec(in *LoadBalancerAccessSpec, out *kops.LoadBalancerAccessSpec, s conversion.Scope) error {
 	out.Type = kops.LoadBalancerType(in.Type)
+	out.IdleTimeoutSeconds = in.IdleTimeoutSeconds
 	return nil
 }
 
@@ -1425,6 +1436,7 @@ func Convert_v1alpha2_LoadBalancerAccessSpec_To_kops_LoadBalancerAccessSpec(in *
 
 func autoConvert_kops_LoadBalancerAccessSpec_To_v1alpha2_LoadBalancerAccessSpec(in *kops.LoadBalancerAccessSpec, out *LoadBalancerAccessSpec, s conversion.Scope) error {
 	out.Type = LoadBalancerType(in.Type)
+	out.IdleTimeoutSeconds = in.IdleTimeoutSeconds
 	return nil
 }
 

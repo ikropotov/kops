@@ -25,11 +25,15 @@ import (
 
 	"k8s.io/kops/pkg/apis/kops"
 	"k8s.io/kops/pkg/apis/kops/util"
+	"k8s.io/kops/pkg/model/components"
+	"net"
 )
 
 type KopsModelContext struct {
+	Cluster *kops.Cluster
+
 	Region         string
-	Cluster        *kops.Cluster
+	HostedZoneID   string // used to set up route53 IAM policy
 	InstanceGroups []*kops.InstanceGroup
 
 	SSHPublicKeys [][]byte
@@ -131,6 +135,11 @@ func (m *KopsModelContext) NodeInstanceGroups() []*kops.InstanceGroup {
 func (m *KopsModelContext) CloudTagsForInstanceGroup(ig *kops.InstanceGroup) (map[string]string, error) {
 	labels := make(map[string]string)
 
+	// Apply any user-specified global labels first so they can be overridden by IG-specific labels
+	for k, v := range m.Cluster.Spec.CloudLabels {
+		labels[k] = v
+	}
+
 	// Apply any user-specified labels
 	for k, v := range ig.Spec.CloudLabels {
 		labels[k] = v
@@ -222,4 +231,8 @@ func VersionGTE(version semver.Version, major uint64, minor uint64) bool {
 		return true
 	}
 	return false
+}
+
+func (c *KopsModelContext) WellKnownServiceIP(id int) (net.IP, error) {
+	return components.WellKnownServiceIP(&c.Cluster.Spec, id)
 }

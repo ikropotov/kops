@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/autoscaling"
+	"github.com/aws/aws-sdk-go/service/cloudformation"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/elb"
 	"github.com/aws/aws-sdk-go/service/iam"
@@ -346,6 +347,55 @@ func DeleteInstance(cloud fi.Cloud, t *ResourceTracker) error {
 	return nil
 }
 
+func DeleteCloudFormationStack(cloud fi.Cloud, t *ResourceTracker) error {
+	c := cloud.(awsup.AWSCloud)
+
+	id := t.ID
+	glog.V(2).Infof("deleting CloudFormation stack %q %q", t.Name, id)
+
+	request := &cloudformation.DeleteStackInput{}
+	request.StackName = &t.Name
+
+	_, err := c.CloudFormation().DeleteStack(request)
+	if err != nil {
+		return fmt.Errorf("error deleting CloudFormation stack %q: %v", id, err)
+	}
+	return nil
+}
+
+func DumpCloudFormationStack(r *ResourceTracker) (interface{}, error) {
+	data := make(map[string]interface{})
+	data["id"] = r.ID
+	data["type"] = r.Type
+	data["raw"] = r.obj
+	return data, nil
+}
+
+func ListCloudFormationStacks(cloud fi.Cloud, clusterName string) ([]*ResourceTracker, error) {
+	var trackers []*ResourceTracker
+	request := &cloudformation.ListStacksInput{}
+	c := cloud.(awsup.AWSCloud)
+	response, err := c.CloudFormation().ListStacks(request)
+	if err != nil {
+		return nil, fmt.Errorf("Unable to list CloudFormation stacks: %v", err)
+	}
+	for _, stack := range response.StackSummaries {
+		if *stack.StackName == clusterName {
+			tracker := &ResourceTracker{
+				Name:    *stack.StackName,
+				ID:      *stack.StackId,
+				Type:    "cloud-formation",
+				deleter: DeleteCloudFormationStack,
+				Dumper:  DumpCloudFormationStack,
+				obj:     stack,
+			}
+			trackers = append(trackers, tracker)
+		}
+	}
+
+	return trackers, nil
+}
+
 func ListInstances(cloud fi.Cloud, clusterName string) ([]*ResourceTracker, error) {
 	c := cloud.(awsup.AWSCloud)
 
@@ -478,6 +528,14 @@ func DeleteSecurityGroup(cloud fi.Cloud, t *ResourceTracker) error {
 	return nil
 }
 
+func DumpSecurityGroup(r *ResourceTracker) (interface{}, error) {
+	data := make(map[string]interface{})
+	data["id"] = r.ID
+	data["type"] = ec2.ResourceTypeSecurityGroup
+	data["raw"] = r.obj
+	return data, nil
+}
+
 func ListSecurityGroups(cloud fi.Cloud, clusterName string) ([]*ResourceTracker, error) {
 	groups, err := DescribeSecurityGroups(cloud)
 	if err != nil {
@@ -492,6 +550,8 @@ func ListSecurityGroups(cloud fi.Cloud, clusterName string) ([]*ResourceTracker,
 			ID:      aws.StringValue(sg.GroupId),
 			Type:    "security-group",
 			deleter: DeleteSecurityGroup,
+			Dumper:  DumpSecurityGroup,
+			obj:     sg,
 		}
 
 		var blocks []string
