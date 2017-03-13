@@ -19,7 +19,14 @@ package v1alpha2
 import metav1 "k8s.io/kubernetes/pkg/apis/meta/v1"
 
 type KubeletConfigSpec struct {
+	// not used for clusters version 1.6 and later
 	APIServers string `json:"apiServers,omitempty" flag:"api-servers"`
+
+	// kubeconfigPath is the path to the kubeconfig file with authorization
+	// information and API server location
+	// kops will only use this for clusters version 1.6 and later
+	KubeconfigPath    string `json:"kubeconfigPath,omitempty" flag:"kubeconfig"`
+	RequireKubeconfig *bool  `json:"requireKubeconfig,omitempty" flag:"require-kubeconfig"`
 
 	LogLevel *int32 `json:"logLevel,omitempty" flag:"v"`
 
@@ -261,4 +268,11 @@ type LeaderElectionConfiguration struct {
 	// before executing the main loop. Enable this when running replicated
 	// components for high availability.
 	LeaderElect *bool `json:"leaderElect,omitempty" flag:"leader-elect"`
+}
+
+type CloudConfiguration struct {
+	// GCE cloud-config options
+	Multizone          *bool   `json:"multizone,omitempty"`
+	NodeTags           *string `json:"nodeTags,omitempty"`
+	NodeInstancePrefix *string `json:"nodeInstancePrefix,omitempty"`
 }

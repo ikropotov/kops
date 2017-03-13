@@ -19,7 +19,14 @@ package v1alpha1
 import metav1 "k8s.io/kubernetes/pkg/apis/meta/v1"
 
 type KubeletConfigSpec struct {
+	// not used for clusters version 1.6 and later
 	APIServers string `json:"apiServers,omitempty" flag:"api-servers"`
+
+	// kubeconfigPath is the path to the kubeconfig file with authorization
+	// information and API server location
+	// kops will only use this for clusters version 1.6 and later
+	KubeconfigPath    string `json:"kubeconfigPath,omitempty" flag:"kubeconfig"`
+	RequireKubeconfig *bool  `json:"requireKubeconfig,omitempty" flag:"require-kubeconfig"`
 
 	LogLevel *int32 `json:"logLevel,omitempty" flag:"v"`
 
@@ -166,8 +173,6 @@ type KubeletConfigSpec struct {
 	//VolumePluginDir string `json:"volumePluginDir"`
 	// cloudProvider is the provider for cloud services.
 	CloudProvider string `json:"cloudProvider,omitempty" flag:"cloud-provider"`
-	//// cloudConfigFile is the path to the cloud provider configuration file.
-	//CloudConfigFile string `json:"cloudConfigFile,omitempty"`
 	// KubeletCgroups is the absolute name of cgroups to isolate the kubelet in.
 	KubeletCgroups string `json:"kubeletCgroups,omitempty" flag:"kubelet-cgroups"`
 	// Cgroups that container runtime is expected to be isolated in.
@@ -442,8 +447,6 @@ type KubeControllerManagerConfig struct {
 	//Address string `json:"address"`
 	// cloudProvider is the provider for cloud services.
 	CloudProvider string `json:"cloudProvider,omitempty" flag:"cloud-provider"`
-	//// cloudConfigFile is the path to the cloud provider configuration file.
-	//CloudConfigFile string `json:"cloudConfigFile"`
 	//// concurrentEndpointSyncs is the number of endpoint syncing operations
 	//// that will be done concurrently. Larger number = faster endpoint updating,
 	//// but more CPU (and network) load.
@@ -639,4 +642,11 @@ type LeaderElectionConfiguration struct {
 	//// acquisition and renewal of a leadership. This is only applicable if
 	//// leader election is enabled.
 	//RetryPeriod unversioned.Duration `json:"retryPeriod"`
+}
+
+type CloudConfiguration struct {
+	// GCE cloud-config options
+	Multizone          *bool   `json:"multizone,omitempty"`
+	NodeTags           *string `json:"nodeTags,omitempty"`
+	NodeInstancePrefix *string `json:"nodeInstancePrefix,omitempty"`
 }

@@ -56,6 +56,11 @@ func TestHA(t *testing.T) {
 	runTest(t, "ha.example.com", "../../tests/integration/ha", "v1alpha2", false, 3)
 }
 
+// TestComplex runs the test on a more complex configuration, intended to hit more of the edge cases
+func TestComplex(t *testing.T) {
+	runTest(t, "complex.example.com", "../../tests/integration/complex", "v1alpha2", false, 1)
+}
+
 // TestMinimalCloudformation runs the test on a minimum configuration, similar to kops create cluster minimal.example.com --zones us-west-1a
 func TestMinimalCloudformation(t *testing.T) {
 	//runTestCloudformation(t, "minimal.example.com", "../../tests/integration/minimal", "v1alpha0", false)
@@ -90,6 +95,11 @@ func TestPrivateCalico(t *testing.T) {
 func TestPrivateCanal(t *testing.T) {
 	runTest(t, "privatecanal.example.com", "../../tests/integration/privatecanal", "v1alpha1", true, 1)
 	runTest(t, "privatecanal.example.com", "../../tests/integration/privatecanal", "v1alpha2", true, 1)
+}
+
+// TestPrivateKopeio runs the test on a configuration with private topology, kopeio networking
+func TestPrivateKopeio(t *testing.T) {
+	runTest(t, "privatekopeio.example.com", "../../tests/integration/privatekopeio", "v1alpha2", true, 1)
 }
 
 func runTest(t *testing.T, clusterName string, srcDir string, version string, private bool, zones int) {
@@ -362,10 +372,16 @@ func (h *IntegrationTestHarness) SetupMockAWS() {
 	})
 
 	mockEC2.Images = append(mockEC2.Images, &ec2.Image{
-		ImageId: aws.String("ami-12345678"),
-		Name:    aws.String("k8s-1.4-debian-jessie-amd64-hvm-ebs-2016-10-21"),
-		OwnerId: aws.String(awsup.WellKnownAccountKopeio),
+		ImageId:        aws.String("ami-12345678"),
+		Name:           aws.String("k8s-1.4-debian-jessie-amd64-hvm-ebs-2016-10-21"),
+		OwnerId:        aws.String(awsup.WellKnownAccountKopeio),
+		RootDeviceName: aws.String("/dev/xvda"),
+	})
 
+	mockEC2.Images = append(mockEC2.Images, &ec2.Image{
+		ImageId:        aws.String("ami-15000000"),
+		Name:           aws.String("k8s-1.5-debian-jessie-amd64-hvm-ebs-2017-01-09"),
+		OwnerId:        aws.String(awsup.WellKnownAccountKopeio),
 		RootDeviceName: aws.String("/dev/xvda"),
 	})
 }
